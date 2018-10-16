@@ -1029,6 +1029,25 @@ TEST(PlatoTestXMLGenerator, parseOptimizationParameters)
     EXPECT_EQ(tester.publicParseOptimizationParameters(iss), true);
     EXPECT_EQ(tester.getFilterAbsolute(), "1.6");
 
+    // filter power
+    stringInput = "begin optimization parameters\n"
+            "filter power\n"
+            "end optimization parameters\n";
+    iss.str(stringInput);
+    iss.clear();
+    iss.seekg (0);
+    tester.clearInputData();
+    EXPECT_EQ(tester.publicParseOptimizationParameters(iss), false);
+    stringInput = "begin optimization parameters\n"
+            "filter power 2.5\n"
+            "end optimization parameters\n";
+    iss.str(stringInput);
+    iss.clear();
+    iss.seekg (0);
+    tester.clearInputData();
+    EXPECT_EQ(tester.publicParseOptimizationParameters(iss), true);
+    EXPECT_EQ(tester.getFilterPower(), "2.5");
+
     // algorithm
     stringInput = "begin optimization parameters\n"
             "algorithm\n"
@@ -1631,6 +1650,54 @@ TEST(PlatoTestXMLGenerator, parseObjectives)
     iss.clear();
     iss.seekg (0);
     EXPECT_EQ(tester.publicParseObjectives(iss), false);
+    tester.clearInputData();
+
+    // Test the "stress limit" keywords
+    stringInput = "begin objective\n"
+            "type limit stress\n"
+            "stress limit 42.5\n"
+            "stress ramp factor 0.24\n"
+            "end objective\n";
+    iss.str(stringInput);
+    iss.clear();
+    iss.seekg (0);
+    EXPECT_EQ(tester.publicParseObjectives(iss), true);
+    EXPECT_EQ(tester.getObjectiveType(0), "limit stress");
+    EXPECT_EQ(tester.getObjStressLimit(0), "42.5");
+    EXPECT_EQ(tester.getObjStressRampFactor(0), "0.24");
+    tester.clearInputData();
+
+    stringInput = "begin objective\n"
+            "type limit stress\n"
+            "end objective\n";
+    iss.str(stringInput);
+    iss.clear();
+    iss.seekg (0);
+    EXPECT_EQ(tester.publicParseObjectives(iss), true);
+    EXPECT_EQ(tester.getObjectiveType(0), "limit stress");
+    EXPECT_EQ(tester.getObjStressLimit(0), "");
+    EXPECT_EQ(tester.getObjStressRampFactor(0), "");
+    tester.clearInputData();
+
+    stringInput = "begin objective\n"
+            "type limit stress\n"
+            "stress limit\n"
+            "end objective\n";
+    iss.str(stringInput);
+    iss.clear();
+    iss.seekg (0);
+    EXPECT_EQ(tester.publicParseObjectives(iss), false);
+    tester.clearInputData();
+
+    stringInput = "begin objective\n"
+            "type limit stress\n"
+            "stress ramp factor\n"
+            "end objective\n";
+    iss.str(stringInput);
+    iss.clear();
+    iss.seekg (0);
+    EXPECT_EQ(tester.publicParseObjectives(iss), false);
+    tester.clearInputData();
 
     // Test the "bcs" keywords
     stringInput =
