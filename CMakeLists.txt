@@ -203,6 +203,11 @@ if(EXPY)
   add_subdirectory(apps/services/python)
 endif()
 
+if(GEOMETRY)
+  message( "-- Compiling Cogent " )
+  add_subdirectory(apps/cogent)
+endif()
+
 if( REGRESSION )
   if( PLATOMAIN )
     if(SEACAS)
