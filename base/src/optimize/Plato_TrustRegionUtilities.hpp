@@ -1,11 +1,4 @@
 /*
- * Plato_Optimizer.hpp
- *
- *  Created on: April 19, 2017
- *
- */
-
-/*
 //@HEADER
 // *************************************************************************
 //   Plato Engine v.1.0: Copyright 2018, National Technology & Engineering
@@ -47,76 +40,37 @@
 //@HEADER
 */
 
-#ifndef SRC_OPTIMIZER_HPP_
-#define SRC_OPTIMIZER_HPP_
-
-#include "Plato_Convergence.hpp"
-
-namespace Plato {
-
-  class Interface;
-
-  using std::string;
-  using std::vector;
-
-/**
- * This class provides an interface between PlatoEngine and the 
- * hosted codes. 
+/*
+ * Plato_TrustRegionUtilities.hpp
+ *
+ *  Created on: Oct 18, 2018
  */
 
-//!  Base class defining optimizer interface
-/*!
-*/
-class Optimizer {
-public:
-  Optimizer(Interface* interface);
-  virtual ~Optimizer();
+#pragma once
 
-  /** this function must not throw an exception.  use m_interface->registerException(). **/
-  virtual void initialize()=0;
+#include "Plato_MultiVector.hpp"
+#include "Plato_LinearAlgebra.hpp"
 
-  /** this function must not throw an exception.  use m_interface->registerException(). **/
-  virtual void optimize()=0;
+namespace Plato
+{
 
-  virtual void finalize();
+/******************************************************************************//**
+ * @brief Compute Cauchy point: \$f p_{C} = -1.0 \frac{\Delta}{\Vert{g}\Vert} g\$f
+ * @param [in] aTrustRegionRadius trust region radius (\$f\Delta\$f)
+ * @param [in] aGradient gradient (\$f -1.0*g \$f)
+ * @param [out] aCauchyPoint Cauchy point () (\$f p_{C} \$f)
+**********************************************************************************/
+template<typename ScalarType>
+void compute_cauchy_point(const ScalarType & aTrustRegionRadius,
+                          const Plato::MultiVector<ScalarType> & aGradient,
+                          Plato::MultiVector<ScalarType> & aCauchyPoint)
+{
+    // cauchy_point = -1.0 * Trust_Region_Radius * (gradient/norm(gradient))
+    Plato::update(static_cast<ScalarType>(1), aGradient, static_cast<ScalarType>(0), aCauchyPoint);
+    ScalarType tNormGradient = Plato::norm(aGradient);
+    ScalarType tCauchyScale = static_cast<ScalarType>(-1.0) * aTrustRegionRadius / tNormGradient;
+    Plato::scale(tCauchyScale, aCauchyPoint);
+}
+// function compute_cauchy_point
 
-protected:
-  
-  double computeNorm(const double* p, int n);
-  double computeDiffNorm(const double* p, const double* p_last, int n, bool printResult);
-
-  Interface* m_interface;
-
-  struct Target {
-    Target(Plato::InputData& node);
-    Target(){}
-    string valueName;
-    double currentValue=0.0;
-    double previousValue=0.0;
-    double targetValue=0.0;
-    string referenceValueName;
-    double referenceValue=1.0;
-    string  gradientName;
-    double* gradient=nullptr;
-    double tolerance=1e-3;
-    bool isLinear=true;
-    bool isEquality=true;
-    bool isRelative=true;
-  };
-
-  vector<Target> m_constraints;
-  Target m_objective;
-
-  ConvergenceTest* convergenceChecker;
- 
-  double m_upperBound, m_lowerBound;
-
-  std::string m_outputStage;
-  std::string m_optimizationDOFsName;
-  std::string m_initializationStage;
-};
-
-
-} // end Plato namespace
-
-#endif
+} // namespace Plato
