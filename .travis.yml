@@ -39,7 +39,7 @@ install:
 script:
   - mkdir -p $HOME/build
   - cd $HOME/build
-  - travis_wait 30 spack setup platoengine+unit_testing+platostatics+regression @master
+  - travis_wait 90 spack setup platoengine+unit_testing+platostatics+regression @master
   - ./spconfig.py $TRAVIS_BUILD_DIR
   - make -j 2
   - make test
