@@ -1,6 +1,6 @@
 language: cpp
 sudo: false
-dist: trusty
+dist: xenial
 
 git:
   depth: 3
@@ -15,7 +15,6 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - g++-7.2
       - environment-modules
 
 env:
@@ -24,10 +23,10 @@ env:
     - PATH: $PATH:$HOME/.cache/spack/bin
 
 before_install:
-  - export CXX=g++-7.2
-  - export CC=gcc-7.2
-  - export FC=gfortran-7.2
-#  - export CXXFLAGS="-std=c++11"
+  - export CXX=g++
+  - export CC=gcc
+  - export FC=gfortran
+  - export CXXFLAGS="-std=c++11"
 
 install:
   - if ! which spack >/dev/null; then
