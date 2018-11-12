@@ -12,11 +12,8 @@ cache:
 
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
     packages:
-      - environment-modules
-      - cmake
+      - gfortran
 
 env:
   global:
