@@ -1,0 +1,52 @@
+language: cpp
+sudo: false
+dist: trusty
+
+git:
+  depth: 3
+
+cache:
+  apt: true
+  directories:
+    - $HOME/.cache
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-7.2
+      - environment-modules
+
+env:
+  global:
+    - SPACK_ROOT: $HOME/.cache/spack
+    - PATH: $PATH:$HOME/.cache/spack/bin
+
+before_install:
+  - export CXX=g++-7.2
+  - export CC=gcc-7.2
+  - export FC=gfortran-7.2
+#  - export CXXFLAGS="-std=c++11"
+
+install:
+  - if ! which spack >/dev/null; then
+      mkdir -p $SPACK_ROOT &&
+      git clone --depth 50 https://github.com/platoengine/spack.git $SPACK_ROOT &&
+      echo -e "config:""\n  build_jobs:"" 2" > $SPACK_ROOT/etc/spack/config.yaml;
+    fi
+  - travis_wait spack install cmake@3.7.2~openssl~ncurses
+  - travis_wait spack install boost@1.62.0~graph~iostream~locale~log~wave
+  - spack clean -a
+  - source /etc/profile &&
+    source $SPACK_ROOT/share/spack/setup-env.sh
+  - spack load cmake
+  - spack load boost
+
+script:
+  - mkdir -p $HOME/build
+  - cd $HOME/build
+  - spack setup platoengine+unit_testing+platostatics+regression @master
+  - ./spconfig.py $TRAVIS_BUILD_DIR
+  - make -j 2
+  - make test
