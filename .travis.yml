@@ -30,7 +30,7 @@ install:
   - if ! which spack >/dev/null; then
       mkdir -p $SPACK_ROOT &&
       git clone --depth 50 https://github.com/platoengine/spack.git $SPACK_ROOT &&
-      echo -e "config:""\n  build_jobs:"" 2" > $SPACK_ROOT/etc/spack/config.yaml;
+      echo -e "config:""\n  build_jobs:"" 4" > $SPACK_ROOT/etc/spack/config.yaml;
     fi
   - spack clean -a
   - source /etc/profile &&
@@ -39,7 +39,7 @@ install:
 script:
   - mkdir -p $HOME/build
   - cd $HOME/build
-  - travis_wait 90 spack setup platoengine+unit_testing+platostatics+regression @master
+  - travis_wait 90 spack setup -v platoengine+unit_testing+platostatics+regression @master
   - ./spconfig.py $TRAVIS_BUILD_DIR
   - make -j 2
   - make test
