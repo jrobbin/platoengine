@@ -42,16 +42,16 @@ install:
   - if [ ! -d $HOME/.spack ]; then
       mkdir $HOME/.spack;
     fi
-  - echo "packages:" > $HOME/.spack/packages.yaml
-  - echo "    openmpi:" >> $HOME/.spack/packages.yaml
-  - echo "        paths:" >> $HOME/.spack/packages.yaml
-  - echo "            openmpi@1.10.1: /opt/local" >> $HOME/.spack/packages.yaml
-  - echo "        buildable: False" >> $HOME/.spack/packages.yaml
+  - echo "packages: " > $HOME/.spack/packages.yaml
+  - echo "    openmpi: " >> $HOME/.spack/packages.yaml
+  - echo "        paths: " >> $HOME/.spack/packages.yaml
+  - echo "            openmpi@1.10.2: /usr " >> $HOME/.spack/packages.yaml
+  - echo "        buildable: False " >> $HOME/.spack/packages.yaml
 
 script:
   - mkdir -p $HOME/build
   - cd $HOME/build
-  - travis_wait 90 spack setup -v platoengine+unit_testing+platostatics+regression @master
+  - travis_wait 90 spack setup -v platoengine+unit_testing+platostatics+regression @master ^openmpi@1.10.2
   - ./spconfig.py $TRAVIS_BUILD_DIR
   - make -j 2
   - make test
