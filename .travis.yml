@@ -42,10 +42,10 @@ install:
   - if [ ! -d $HOME/.spack ]; then
       mkdir $HOME/.spack;
     fi  
-  - printf 'packages:' > $HOME/.spack/packages.yaml
-  - printf '    openmpi:' >> $HOME/.spack/packages.yaml
-  - printf '        openmpi@1.10.2:\ /usr' >> $HOME/.spack/packages.yaml
-  - printf '    buildable:\ False' >> $HOME/.spack/packages.yaml
+  - printf 'packages:\n' > $HOME/.spack/packages.yaml
+  - printf '    openmpi:\n' >> $HOME/.spack/packages.yaml
+  - printf '        openmpi@1.10.2:' && printf ' /usr\n' >> $HOME/.spack/packages.yaml
+  - printf '    buildable:' && echo ' False\n' >> $HOME/.spack/packages.yaml
   - cat $HOME/.spack/packages.yaml
 
 script:
