@@ -41,7 +41,8 @@ install:
     source $SPACK_ROOT/share/spack/setup-env.sh
   - if [ ! -d $HOME/.spack ]; then
       mkdir $HOME/.spack;
-    fi
+    fi  
+  - echo "packages:" > $HOME/.spack/packages
 
 script:
   - mkdir -p $HOME/build
