@@ -42,9 +42,6 @@ install:
   - if [ ! -d $HOME/.spack ]; then
       mkdir $HOME/.spack;
     fi
-  - echo "packages: " > $HOME/.spack/packages.yaml
-  - cat $HOME/.spack/packages.yaml
-
 
 script:
   - mkdir -p $HOME/build
