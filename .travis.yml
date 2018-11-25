@@ -44,8 +44,8 @@ install:
     fi  
   - printf 'packages:' > $HOME/.spack/packages.yaml
   - printf '    openmpi:' >> $HOME/.spack/packages.yaml
-  - printf '        openmpi@1.10.2: /usr' >> $HOME/.spack/packages.yaml
-  - printf '    buildable: False' >> $HOME/.spack/packages.yaml
+  - printf '        openmpi@1.10.2:\ /usr' >> $HOME/.spack/packages.yaml
+  - printf '    buildable:\ False' >> $HOME/.spack/packages.yaml
   - cat $HOME/.spack/packages.yaml
 
 script:
