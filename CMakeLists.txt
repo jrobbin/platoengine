@@ -116,25 +116,14 @@ endif()
 ############################## gtest Setup ####################################
 ###############################################################################
 if( UNIT_TESTING )
-find_library( GTEST_LIBRARY NAMES gtest
-              PATHS ${GTEST_HOME}/lib NO_DEFAULT_PATH)
-
-if( GTEST_LIBRARY )
-  message( "-- Info: Using GTest library: ${GTEST_LIBRARY}" )
-else( GTEST_LIBRARY )
-  message( "-- Error: GTest not found." )
-endif( GTEST_LIBRARY )
-
-find_path( GTEST_INCLUDE NAMES gtest.h
-           PATHS ${GTEST_HOME}/include/gtest NO_DEFAULT_PATH )
-
-if( GTEST_INCLUDE )
-  message( "-- Info: Using GTest headers in ${GTEST_INCLUDE}" )
-  include_directories( ${GTEST_INCLUDE} )
-else( GTEST_INCLUDE )
-  message( "-- Error: GTest headers not found." )
-endif( GTEST_INCLUDE )
+  if(DEFINED GTEST_HOME)
+    set(CMAKE_PREFIX_PATH ${GTEST_HOME} ${CMAKE_PREFIX_PATH})
+  endif()
+  find_package(GTest REQUIRED)
+  set(PLATO_LIBRARIES ${GTEST_BOTH_LIBRARIES})
+  include_directories( ${GTEST_INCLUDE_DIRS} )
 endif()
+
 
 
 
