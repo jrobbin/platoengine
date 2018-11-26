@@ -18,6 +18,7 @@ addons:
       - libopenmpi1.10
       - openmpi-bin
       - openmpi-common
+      - cmake
 
 env:
   global:
@@ -49,12 +50,19 @@ install:
   - printf ' /usr\n' >> $HOME/.spack/packages.yaml
   - printf '        buildable:' >> $HOME/.spack/packages.yaml
   - printf ' False\n' >> $HOME/.spack/packages.yaml
+  - printf '    cmake:\n' >> $HOME/.spack/packages.yaml
+  - printf '        paths:\n' >> $HOME/.spack/packages.yaml
+  - printf '            cmake@3.5.1:' >> $HOME/.spack/packages.yaml
+  - printf ' /usr\n' >> $HOME/.spack/packages.yaml
+  - printf '        buildable:' >> $HOME/.spack/packages.yaml
+  - printf ' False\n' >> $HOME/.spack/packages.yaml
+
   - cat $HOME/.spack/packages.yaml
 
 script:
   - mkdir -p $HOME/build
   - cd $HOME/build
-  - travis_wait 30 spack setup platoengine+unit_testing+platostatics+regression @master ^openmpi@1.10.2
+  - travis_wait 30 spack setup platoengine+unit_testing+platostatics+regression @master ^openmpi@1.10.2 ^cmake@3.5.1
   - ./spconfig.py $TRAVIS_BUILD_DIR
   - make -j 2
   - make test
