@@ -54,7 +54,7 @@ install:
 script:
   - mkdir -p $HOME/build
   - cd $HOME/build
-  - travis_wait 30 spack spec platoengine+unit_testing+platostatics+regression @master ^openmpi@1.10.2
+  - travis_wait 30 spack setup platoengine+unit_testing+platostatics+regression @master ^openmpi@1.10.2
   - ./spconfig.py $TRAVIS_BUILD_DIR
   - make -j 2
   - make test
